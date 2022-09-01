@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="CylinderMesh" id=1]
+
+[sub_resource type="PrismMesh" id=2]
+
+[node name="CoordSysTest" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.667521, -1.06074, 1.44687 )
+
+[node name="Parent Cylinder" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 2, 2, 0 )
+mesh = SubResource( 1 )
+
+[node name="Grandchild Prism" type="MeshInstance" parent="Parent Cylinder"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
+mesh = SubResource( 2 )
