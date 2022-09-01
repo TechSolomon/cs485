@@ -11,7 +11,12 @@ config_version=4
 [application]
 
 config/name="tutorial"
+run/main_scene="res://CoordSysTest.tscn"
 config/icon="res://icon.png"
+
+[global]
+
+filter=false
 
 [gui]
 
@@ -23,4 +28,5 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+quality/shadows/filter_mode=2
 environment/default_environment="res://default_env.tres"

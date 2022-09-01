@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=2]
+
+[sub_resource type="CylinderMesh" id=1]
+
+[sub_resource type="PrismMesh" id=2]
+
+[sub_resource type="SpatialMaterial" id=3]
+albedo_color = Color( 0.388235, 0.729412, 0.305882, 1 )
+
+[sub_resource type="CylinderMesh" id=4]
+
+[node name="Mousehouse" type="Spatial"]
+
+[node name="House" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 1, 2, 0 )
+mesh = SubResource( 1 )
+
+[node name="Roof" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 1, 3.41421, 1.41421 )
+mesh = SubResource( 2 )
+skeleton = NodePath("../House")
+material/0 = SubResource( 3 )
+
+[node name="LightTop" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0 )
+
+[node name="OmniLight" type="OmniLight" parent="LightTop"]
+transform = Transform( 1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 2, 4.86788, 2.86788 )
+
+[node name="Light Cap" type="MeshInstance" parent="LightTop"]
+transform = Transform( 0.5, 0, 0, 0, 0.0707107, -0.353554, 0, 0.0707107, 0.353554, 2, 5.53898, 3.53898 )
+mesh = SubResource( 4 )
+skeleton = NodePath("../../Roof")
