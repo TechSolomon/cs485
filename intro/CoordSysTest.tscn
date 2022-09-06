@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Houseish.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Shake.gd" type="Script" id=2]
+[ext_resource path="res://RotationTesting.gd" type="Script" id=3]
 
 [sub_resource type="PlaneMesh" id=5]
 size = Vector2( 100, 100 )
@@ -22,8 +22,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.667521, -1.06074, 1.44687 )
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( -0.862586, 0.278274, -0.422504, 0.37768, 0.909856, -0.171815, 0.336606, -0.307776, -0.889927, -1.92807, 3.00085, -6.01848 )
-script = ExtResource( 2 )
-angriness = 2
+script = ExtResource( 3 )
 
 [node name="Ground" type="MeshInstance" parent="."]
 mesh = SubResource( 5 )
