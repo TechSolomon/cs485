@@ -1,0 +1,20 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+resource_local_to_scene = true
+code = "shader_type spatial;
+
+//render_mode unshaded;
+
+void vertex()
+{
+	
+}
+
+void fragment() {
+	vec3 world=(CAMERA_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec3 camera=CAMERA_MATRIX[3].xyz;
+	ALBEDO = world;
+}
+
+"

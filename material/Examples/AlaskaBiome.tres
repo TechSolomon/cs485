@@ -1,0 +1,33 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=1]
+resource_local_to_scene = true
+code = "shader_type spatial;
+
+varying vec2 groundTC;
+varying float elevation;
+uniform sampler2D elevationTexture;
+uniform float elevationScale=10.0;
+void vertex() {
+	groundTC = UV;
+	elevation = elevationScale*texture(elevationTexture,groundTC).r;
+	VERTEX.y += elevation;
+}
+
+uniform sampler2D rockTexture;
+uniform sampler2D treeTexture;
+uniform sampler2D normalTexture;
+uniform sampler2D biomeTexture;
+
+void fragment()
+{
+	vec3 biome = texture(biomeTexture,groundTC).rgb;
+	ALBEDO = NORMAL;
+}
+
+
+"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/elevationScale = 10.0

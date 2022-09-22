@@ -1,0 +1,19 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+resource_local_to_scene = true
+code = "shader_type spatial;
+
+varying vec2 groundTC;
+varying float elevation;
+uniform sampler2D elevationTexture;
+uniform float elevationScale=10.0;
+void vertex() {
+	groundTC = UV;
+	elevation = elevationScale*texture(elevationTexture,groundTC).r;
+	VERTEX.y += elevation;
+}
+
+uniform sampler2D rockTexture;
+
+"

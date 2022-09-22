@@ -1,22 +1,131 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Examples/new_shadermaterial.tres" type="Material" id=1]
 
-[sub_resource type="SpatialMaterial" id=4]
-albedo_color = Color( 0.0862745, 0.768627, 0.85098, 1 )
+[sub_resource type="ShaderMaterial" id=21]
 
 [sub_resource type="SphereMesh" id=1]
-material = SubResource( 4 )
+material = SubResource( 21 )
 
 [sub_resource type="SpatialMaterial" id=9]
 albedo_color = Color( 1, 0.423529, 0, 1 )
 
+[sub_resource type="CubeMesh" id=22]
+
+[sub_resource type="Shader" id=17]
+code = "shader_type spatial;
+// render_mode cull_disabled;
+// render_mode unshaded;
+
+void vertex()
+{
+	
+}
+
+void fragment() {
+	vec3 world=(CAMERA_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec3 camera=CAMERA_MATRIX[3].xyz;
+	vec3 C = camera, D = world-camera;
+	float r=1.0; // radius of sphere
+	
+	/*
+		On line: L = C + t * D
+		Oh sphere: dot(P,P) = r*r
+		L = P
+		dot(C + t * D,C + t * D) = r*r
+		dot(C,C + t * D) + dot(t*D,C + t * D) = r*r
+		dot(C,C) + dot(C,t * D) + dot(t*D,C + t * D) = r*r
+		dot(C,C) + t*dot(C,D) + t*dot(D,C + t * D) = r*r
+		dot(C,C) + t*dot(C,D) + t*(dot(D,C) + t * dot(D,D)) = r*r
+		dot(C,C)-r*r + 2.0*t*dot(C,D) + t * t * dot(D,D) = 0
+		c + b*t + a*t^2 = 0
+		t = ()-b +- sqrt(b*b - 4.0*a*c)/2.0*a;		
+	*/
+	
+	float c = dot(C,C)-r*r;
+	float b = 2.0*dot(C,D);
+	float a = dot(D,D);
+	float det = b*b - 4.0*a*c;
+	if (det<0.0) discard;
+	float t = (-b - sqrt(det))/(2.0*a);
+	if (t<0.0) {
+		// Intersection beyond camera
+		t = (-b + sqrt(det))/(2.0*a);
+		if (t<0.0) discard;
+	}
+	
+	vec3 worldHit = C + t * D;
+	vec3 worldNormal = normalize(worldHit);
+	// NORMAL = (INV_CAMERA_MATRIX * vec3(worldNormal,0.0)).xyz;
+	ALBEDO = vec3(fract(worldHit*4.0));
+}
+
+"
+
+[sub_resource type="ShaderMaterial" id=18]
+shader = SubResource( 17 )
+
 [sub_resource type="CubeMesh" id=5]
 
-[sub_resource type="SpatialMaterial" id=10]
-albedo_color = Color( 0.027451, 0.745098, 0.803922, 1 )
+[sub_resource type="Shader" id=20]
+
+[sub_resource type="ShaderMaterial" id=15]
+shader = SubResource( 20 )
 
 [sub_resource type="CylinderMesh" id=11]
+
+[sub_resource type="Shader" id=23]
+code = "shader_type spatial;
+render_mode cull_disabled;
+// render_mode unshaded;
+
+void vertex()
+{
+	
+}
+
+void fragment() {
+	vec3 world=(CAMERA_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec3 camera=CAMERA_MATRIX[3].xyz;
+	vec3 C = camera, D = world-camera;
+	vec3 N = vec3(0,1,0);
+	
+	/*
+		On line: L = C + t * D
+		Oh sphere: dot(P,N) = 0
+		P = L
+		dot(C + t * D,N)
+		dot(C,N) + t*dot(D,N) = 0
+		t*dot(D,N) = -dot(C,N)
+		t = -dot(C,N) / dot(D,N)
+		
+		
+		c + b*t + a*t^2 = 0
+		t = ()-b +- sqrt(b*b - 4.0*a*c)/2.0*a;		
+	*/
+	
+	float cn = dot(C,N);
+	float dn = dot(D,N);
+	if (dn==0.0) discard;
+	float t = -cn / dn;
+	if (t<0.0) {
+		discard;
+	}
+	
+	vec3 worldHit = C + t * D;
+	vec3 worldNormal = normalize(worldHit);
+	ALBEDO = vec3(fract(worldHit*4.0));
+	ALBEDO.g=0.0;
+}
+
+"
+
+[sub_resource type="ShaderMaterial" id=13]
+shader = SubResource( 23 )
+
+[sub_resource type="PlaneMesh" id=14]
+material = SubResource( 13 )
+size = Vector2( 2000, 2000 )
 
 [node name="Spatial" type="Spatial"]
 
@@ -25,16 +134,25 @@ material_override = ExtResource( 1 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 9 )
 
+[node name="Blob" type="MeshInstance" parent="Sphere"]
+mesh = SubResource( 22 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 18 )
+
 [node name="Cube" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.91595, 0, 0 )
 material_override = ExtResource( 1 )
 mesh = SubResource( 5 )
-material/0 = SubResource( 10 )
+material/0 = SubResource( 15 )
 
 [node name="Cylinder" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0 )
 material_override = ExtResource( 1 )
 mesh = SubResource( 11 )
 material/0 = ExtResource( 1 )
+
+[node name="Ground" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0 )
+mesh = SubResource( 14 )
 
 [node name="Sun" type="DirectionalLight" parent="."]
