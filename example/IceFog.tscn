@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=2]
+
+[sub_resource type="SpatialMaterial" id=27]
+flags_transparent = true
+flags_vertex_lighting = true
+flags_do_not_receive_shadows = true
+vertex_color_use_as_albedo = true
+params_blend_mode = 1
+params_billboard_mode = 3
+particles_anim_h_frames = 6
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id=28]
+material = SubResource( 27 )
+
+[sub_resource type="Curve" id=24]
+max_value = 4.0
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 4 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=22]
+
+[node name="Ice Fog" type="Spatial"]
+visible = false
+
+[node name="Atmospheric" type="CPUParticles" parent="."]
+amount = 128
+speed_scale = 0.5
+lifetime_randomness = 0.1
+mesh = SubResource( 28 )
+emission_shape = 1
+emission_sphere_radius = 1.0
+spread = 100.0
+gravity = Vector3( 0, 1, 0 )
+scale_amount_curve = SubResource( 24 )
+color_ramp = SubResource( 22 )
+anim_offset = 1.0
+anim_offset_random = 1.0

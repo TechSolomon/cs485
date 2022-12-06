@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="CylinderMesh" id=4]
+
+[node name="LightTop" type="Spatial"]
+
+[node name="OmniLight" type="OmniLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 2, 4.86788, 2.86788 )
+light_color = Color( 1, 0.901961, 0.572549, 1 )
+shadow_enabled = true
+omni_range = 5.825
+
+[node name="Light Cap" type="MeshInstance" parent="."]
+transform = Transform( 0.5, 0, 0, 0, 0.0707107, -0.353554, 0, 0.0707107, 0.353554, 2, 5.53898, 3.53898 )
+mesh = SubResource( 4 )
